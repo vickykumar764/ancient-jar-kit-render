@@ -1,0 +1,95 @@
+name: Render kit (frames 500-2789)
+on:
+  workflow_dispatch:
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: 0
+            range: "500-614"
+            count: 115
+          - shard: 1
+            range: "615-729"
+            count: 115
+          - shard: 2
+            range: "730-844"
+            count: 115
+          - shard: 3
+            range: "845-959"
+            count: 115
+          - shard: 4
+            range: "960-1074"
+            count: 115
+          - shard: 5
+            range: "1075-1189"
+            count: 115
+          - shard: 6
+            range: "1190-1304"
+            count: 115
+          - shard: 7
+            range: "1305-1419"
+            count: 115
+          - shard: 8
+            range: "1420-1534"
+            count: 115
+          - shard: 9
+            range: "1535-1649"
+            count: 115
+          - shard: 10
+            range: "1650-1764"
+            count: 115
+          - shard: 11
+            range: "1765-1879"
+            count: 115
+          - shard: 12
+            range: "1880-1994"
+            count: 115
+          - shard: 13
+            range: "1995-2109"
+            count: 115
+          - shard: 14
+            range: "2110-2224"
+            count: 115
+          - shard: 15
+            range: "2225-2339"
+            count: 115
+          - shard: 16
+            range: "2340-2454"
+            count: 115
+          - shard: 17
+            range: "2455-2569"
+            count: 115
+          - shard: 18
+            range: "2570-2684"
+            count: 115
+          - shard: 19
+            range: "2685-2789"
+            count: 105
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install Playwright
+        run: npm install playwright@1.65.0
+      - name: Install three.js
+        run: cd web && npm ci
+      - name: Install Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Render shard
+        run: node render.mjs frames "${{ matrix.range }}"
+      - name: Verify frame count
+        run: |
+          n=$(ls frames/*.jpg | wc -l)
+          echo "rendered ${n} frames, expected ${{ matrix.count }}"
+          test "$n" -eq "${{ matrix.count }}"
+      - name: Upload frames
+        uses: actions/upload-artifact@v4
+        with:
+          name: kit-frames-shard-${{ matrix.shard }}
+          path: frames/
+          if-no-files-found: error
+          retention-days: 2
