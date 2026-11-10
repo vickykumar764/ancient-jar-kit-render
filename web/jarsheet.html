@@ -1,0 +1,19 @@
+<!doctype html><html><body style="margin:0;background:#9fb7d6">
+<canvas id="c" width="2400" height="2200"></canvas>
+<script type="module">
+import * as T from "./toon.js"; import * as C from "./castdefs.js";
+const g = document.getElementById("c").getContext("2d");
+const cell = (i, j, fn, w = 600, h = 1000) => { g.save(); g.translate(i * 480 - 60, j * 1080 + 40); g.scale(0.8, 0.8); g.translate((600 - w) / 2, 1000 - h); fn(new T.Pen(g)); g.restore(); };
+const L = -Math.PI * 2 / 3;
+cell(0, 0, (p) => T.bodyFrontX(p, C.INVENTOR, { expr: "neutral", armR: "point", seed: 21, light: L }));
+cell(1, 0, (p) => T.bodyFrontX(p, C.EMPEROR, { expr: "stern", armR: "point", seed: 22, light: L }));
+cell(2, 0, (p) => T.bodyFrontX(p, C.EMPEROR, { expr: "laugh", armL: "belly", armR: "belly", seed: 22, light: L }));
+cell(3, 0, (p) => T.bodyFrontX(p, C.GUARD, { expr: "stern", seed: 23, light: L }));
+cell(4, 0, (p) => T.bodyFrontX(p, C.COURT_1, { expr: "laugh", armL: "belly", armR: "belly", seed: 24, light: L }));
+cell(0, 1, (p) => T.bodySideX(p, C.INVENTOR, { mode: "walk", phase: 0.2, expr: "stubborn", seed: 21, light: L }));
+cell(1, 1, (p) => T.bodySideX(p, C.INVENTOR, { mode: "walk", phase: 0.6, expr: "pained", seed: 21, light: L }));
+cell(2, 1, (p) => T.bodySideX(p, C.GUARD, { mode: "walk", phase: 0.3, expr: "stern", seed: 23, light: L }));
+cell(3, 1, (p) => T.bodyFrontX(p, C.INVENTOR, { expr: "shock", seed: 21, light: L }));
+cell(4, 1, (p) => T.bodyFrontX(p, C.COURT_2, { expr: "nervous", seed: 25, light: L }));
+window.done = true;
+</script></body></html>

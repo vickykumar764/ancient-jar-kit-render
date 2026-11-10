@@ -1,0 +1,8 @@
+{
+  "name": "ancient-jar-kit-render",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "playwright": "^1.65.0"
+  }
+}
